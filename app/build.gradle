@@ -1,0 +1,134 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    defaultConfig {
+        applicationId "com.caiiiyua.bleplayground"
+        minSdkVersion 18
+        versionCode 2
+        targetSdkVersion rootProject.ext.compileSdkVersion
+
+        archivesBaseName = "BlePlayground"
+        versionName rootProject.ext.versionName
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                output.outputFile = new File(
+                        output.outputFile.parent,
+                        output.outputFile.name.replace(".apk", "-${variant.versionName}.apk"))
+            }
+        }
+//        ext.betaDistributionGroupAliases="testers"
+        ext.betaDistributionNotifications = false
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        sign {
+            storeFile file(KEYSTORE_FILE)
+            storePassword KEYSTORE_PASSWORD
+            keyAlias KEYSTORE_ALIAS
+            keyPassword KEYSTORE_ALIAS_PASSWORD
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            signingConfig signingConfigs.sign
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', 'BASE_URL', '"http://inaiping.xyz/timelines/"'
+        }
+        debug {
+            minifyEnabled false
+            debuggable true
+            signingConfig signingConfigs.sign
+            buildConfigField 'String', 'BASE_URL', '"http://inaiping.xyz/timelines/"'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+    }
+
+//    dexOptions {
+//        jumboMode = true
+//    }
+}
+
+dependencies {
+    final SUPPORT_LIBRARY_VERSION = rootProject.ext.supportLibVersion
+    final STETHE_VERSION = '1.4.1'
+    final DAGGER_VERSION = '2.5'
+    final REACTIVEX_VERSION = '1.1.6'
+    final REACTIVEX_ANDROID_VERSION = '1.2.1'
+    final RETROFIT_VERSION = '2.1.0'
+    final GSON_VERSION = '2.7'
+    final OKHTTP_VERSION = '3.3.1'
+    final SQLBRITE_VERSION = '1.1.0'
+    final JODA_TIME_VERSION = '2.3'
+    final CIRCLE_IMAGE_VERSION = '2.1.0'
+    final FIREBASE_VERSION = '10.0.1'
+    final RXBLE_VERSION = '1.2.2'
+
+
+    def daggerCompiler = "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "com.facebook.stetho:stetho:$STETHE_VERSION"
+    compile "com.facebook.stetho:stetho-okhttp3:$STETHE_VERSION"
+
+    compile "com.google.dagger:dagger:$DAGGER_VERSION"
+    annotationProcessor daggerCompiler
+    //Required by Dagger2
+
+    compile "io.reactivex:rxandroid:$REACTIVEX_ANDROID_VERSION"
+    compile "io.reactivex:rxjava:$REACTIVEX_VERSION"
+
+    compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+    compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
+    compile "com.google.code.gson:gson:$GSON_VERSION"
+    compile "com.squareup.sqlbrite:sqlbrite:$SQLBRITE_VERSION"
+
+    compile "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
+    compile "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
+
+    compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:cardview-v7:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
+
+    compile "com.google.firebase:firebase-database:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
+    compile 'com.firebaseui:firebase-ui-auth:1.1.1'
+
+    // 3rd-party utils
+    compile "de.hdodenhof:circleimageview:$CIRCLE_IMAGE_VERSION"
+    compile "joda-time:joda-time:$JODA_TIME_VERSION"
+    // RxAndroidBle
+    compile "com.polidea.rxandroidble:rxandroidble:$RXBLE_VERSION"
+
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    // Android test
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    // Unit test
+    testCompile 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-core:2.+"
+}

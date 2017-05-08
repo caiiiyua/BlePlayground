@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.caiiiyua.bleplayground.ui.scanner.TimelineActivity"
+    tools:showIn="@layout/activity_timeline">
+
+    <TextView
+        android:id="@+id/timeline_label"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/label_text"
+        android:background="@color/brown50"
+        android:paddingBottom="@dimen/text_margin"
+        android:paddingLeft="@dimen/padding_label"
+        android:paddingTop="@dimen/text_margin"
+        android:textColor="@color/grey500"
+        android:textSize="@dimen/label_text_size" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/timeline_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/timeline_label"
+        android:scrollbars="vertical">
+
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>
